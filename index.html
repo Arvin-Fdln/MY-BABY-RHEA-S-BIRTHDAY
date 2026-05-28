@@ -226,6 +226,43 @@
     font-size: 18px; letter-spacing: 6px; margin: 0 auto;
   }
 
+  /* SPLASH SCREEN */
+  .splash {
+    position: fixed; inset: 0; z-index: 999;
+    background: linear-gradient(160deg, #fff0f7 0%, #fde8f0 50%, #ffe4f0 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 40px 28px;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  .splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .splash-emoji { font-size: 56px; margin-bottom: 20px; animation: floatEmoji 2s ease infinite; }
+  @keyframes floatEmoji {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  .splash h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 8vw, 40px);
+    color: var(--text); margin-bottom: 10px; line-height: 1.2;
+  }
+  .splash h2 span { font-style: italic; color: var(--deep-pink); }
+  .splash p { font-size: 14px; color: var(--muted); margin-bottom: 36px; line-height: 1.6; }
+  .splash-btn {
+    padding: 16px 40px;
+    background: var(--deep-pink); color: white;
+    border: none; border-radius: 50px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 17px; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.3px;
+    box-shadow: 0 6px 24px rgba(232,100,154,0.35);
+    transition: transform 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 54px; min-width: 200px;
+    animation: fadeUp 1s ease 0.3s both;
+  }
+  .splash-btn:active { transform: scale(0.96); }
+
   /* MUSIC PLAYER */
   .music-btn {
     position: fixed; bottom: 24px; right: 20px; z-index: 100;
@@ -258,7 +295,14 @@
 <body>
 
 <audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
-<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Toggle music">🎵</button>
+
+<!-- SPLASH SCREEN -->
+<div class="splash" id="splash">
+  <div class="splash-emoji">🎂</div>
+  <h2>A little something<br>for <span>Rhea</span> 🌸</h2>
+  <p>Tap below to open your birthday surprise<br>with music 🎵</p>
+  <button class="splash-btn" onclick="enterSite()">Open your gift 💕</button>
+</div>
 
 <div class="petals-container" id="petals"></div>
 
@@ -315,16 +359,26 @@
   </div>
 </section>
 
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Toggle music">🔊</button>
+
 <footer>
   Made with all my heart, just for <span>Rhea Balaoro</span> 🌸<br>
   <span style="font-size:15px; color:var(--muted);">21 & forever loved</span>
 </footer>
 
 <script>
-  // Music
+  // Music + Splash
   const music = document.getElementById('bgMusic');
   const musicBtn = document.getElementById('musicBtn');
-  let musicStarted = false;
+  const splash = document.getElementById('splash');
+
+  function enterSite() {
+    splash.classList.add('hidden');
+    music.play().then(() => {
+      musicBtn.textContent = '🔊';
+      musicBtn.classList.add('playing');
+    }).catch(() => {});
+  }
 
   function toggleMusic() {
     if (music.paused) {
@@ -338,29 +392,6 @@
       musicBtn.classList.remove('playing');
     }
   }
-
-  // Auto-play on first user interaction with the page
-  document.addEventListener('touchstart', function autoPlay() {
-    if (!musicStarted) {
-      musicStarted = true;
-      music.play().then(() => {
-        musicBtn.textContent = '🔊';
-        musicBtn.classList.add('playing');
-      }).catch(() => {});
-    }
-    document.removeEventListener('touchstart', autoPlay);
-  }, { once: true });
-
-  document.addEventListener('click', function autoPlayClick() {
-    if (!musicStarted) {
-      musicStarted = true;
-      music.play().then(() => {
-        musicBtn.textContent = '🔊';
-        musicBtn.classList.add('playing');
-      }).catch(() => {});
-    }
-    document.removeEventListener('click', autoPlayClick);
-  }, { once: true });
 
   // Petals
   const petals = document.getElementById('petals');
