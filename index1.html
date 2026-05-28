@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;400;500;600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --pink: #f7a8c4;
+    --deep-pink: #e8649a;
+    --blush: #fde8f0;
+    --rose: #f2b8cb;
+    --cream: #fff8fb;
+    --text: #5a2d45;
+    --muted: #a07080;
+    --gold: #f0c77a;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  /* PETALS */
+  .petals-container {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .petal {
+    position: absolute; top: -40px;
+    animation: fall linear infinite;
+    opacity: 0.7;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-40px) rotate(0deg); opacity: 0.8; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* HERO */
+  .hero {
+    position: relative; min-height: 100svh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 24px 80px;
+    background: linear-gradient(160deg, #fff0f7 0%, #fde8f0 50%, #ffe4f0 100%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(247,168,196,0.35) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(240,199,122,0.2) 0%, transparent 50%);
+  }
+  .hero-inner { position: relative; z-index: 2; width: 100%; }
+
+  .age-badge {
+    display: inline-block;
+    font-family: 'Dancing Script', cursive;
+    font-size: 18px; color: var(--deep-pink);
+    border: 1.5px solid var(--rose);
+    padding: 6px 18px; border-radius: 30px;
+    background: rgba(255,255,255,0.75);
+    margin-bottom: 20px;
+    animation: fadeUp 1s ease both;
+    backdrop-filter: blur(4px);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 11vw, 72px);
+    line-height: 1.15; color: var(--text);
+    animation: fadeUp 1s ease 0.2s both;
+  }
+  .hero h1 span {
+    font-style: italic; color: var(--deep-pink); display: block;
+  }
+  .hero-sub {
+    font-size: 14px; color: var(--muted);
+    margin-top: 16px; letter-spacing: 0.3px;
+    animation: fadeUp 1s ease 0.4s both;
+    line-height: 1.6;
+  }
+  .scroll-hint {
+    position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: var(--muted); letter-spacing: 1px; white-space: nowrap;
+    animation: bounce 2s ease infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-7px)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* SECTIONS */
+  section {
+    position: relative; z-index: 1;
+    padding: 56px 20px; width: 100%; max-width: 600px; margin: 0 auto;
+  }
+  .section-label {
+    font-family: 'Dancing Script', cursive;
+    font-size: 17px; color: var(--deep-pink);
+    margin-bottom: 10px; letter-spacing: 0.5px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 7vw, 36px);
+    margin-bottom: 20px; line-height: 1.25;
+  }
+
+  /* LETTER */
+  .letter-card {
+    background: white;
+    border: 1px solid var(--rose);
+    border-radius: 20px;
+    padding: 36px 24px 32px;
+    position: relative;
+    box-shadow: 0 6px 32px rgba(232,100,154,0.09);
+  }
+  .letter-card::before {
+    content: '💌';
+    position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+    font-size: 30px;
+  }
+  .letter-card p {
+    font-size: 15px; line-height: 1.9; color: var(--text);
+    margin-bottom: 14px;
+  }
+  .letter-card p:last-of-type { margin-bottom: 0; }
+  .letter-sig {
+    margin-top: 24px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 22px; color: var(--deep-pink);
+    text-align: right;
+  }
+
+  /* GALLERY */
+  .gallery-section { text-align: center; }
+  .gallery-hint { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .photo-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .photo-slot {
+    width: 100%; aspect-ratio: 1;
+    border-radius: 16px;
+    border: 2px dashed var(--rose);
+    background: var(--blush);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.25s;
+    overflow: hidden; position: relative;
+    font-size: 12px; color: var(--muted); gap: 6px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .photo-slot:active { transform: scale(0.97); background: #fdd6e8; }
+  .photo-slot img {
+    width: 100%; height: 100%; object-fit: cover;
+    position: absolute; inset: 0; border-radius: 14px;
+  }
+  .photo-slot input[type=file] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    width: 100%; height: 100%;
+  }
+  .plus { font-size: 26px; color: var(--rose); line-height: 1; }
+  .photo-caption {
+    font-size: 11px; color: var(--muted); font-style: italic; text-align: center;
+  }
+
+  /* REASONS */
+  .reasons-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .reason-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: white; border-radius: 14px; padding: 14px 16px;
+    border: 1px solid #f5d5e5;
+    box-shadow: 0 2px 10px rgba(232,100,154,0.05);
+    transition: transform 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .reason-item:active { transform: scale(0.98); }
+  .reason-num {
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px; color: var(--deep-pink);
+    min-width: 32px; line-height: 1;
+  }
+  .reason-text { font-size: 14px; line-height: 1.65; padding-top: 2px; }
+
+  /* BIRTHDAY BANNER */
+  .bday-banner {
+    text-align: center;
+    background: linear-gradient(135deg, #fde8f0, #fff0f7);
+    border-radius: 24px; padding: 40px 24px;
+    border: 1px solid var(--rose);
+    box-shadow: 0 6px 32px rgba(232,100,154,0.09);
+  }
+  .bday-banner h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(30px, 8vw, 50px);
+    color: var(--deep-pink); margin-bottom: 14px;
+    line-height: 1.2;
+  }
+  .bday-banner p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .confetti-btn {
+    margin-top: 24px;
+    padding: 14px 32px;
+    background: var(--deep-pink);
+    color: white; border: none; border-radius: 30px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 16px; font-weight: 600;
+    cursor: pointer; transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(232,100,154,0.3);
+    -webkit-tap-highlight-color: transparent;
+    min-height: 48px;
+    width: 100%;
+    max-width: 280px;
+  }
+  .confetti-btn:active { transform: scale(0.97); }
+
+  /* DIVIDER */
+  .divider {
+    text-align: center; color: var(--rose);
+    font-size: 18px; letter-spacing: 6px; margin: 0 auto;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 40px 24px 60px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 20px; color: var(--muted); line-height: 1.8;
+  }
+  footer span { color: var(--deep-pink); }
+</style>
+</head>
+<body>
+
+<div class="petals-container" id="petals"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="age-badge">✨ She's finally 21 ✨</div>
+    <h1>Happy Birthday,<span>My Babyyy 🌸</span></h1>
+    <p class="hero-sub">Rhea Balaoro &nbsp;·&nbsp; The one who holds my whole heart</p>
+  </div>
+  <div class="scroll-hint">scroll down ↓</div>
+</div>
+
+<!-- LOVE LETTER -->
+<section>
+  <div class="section-label">a letter for you</div>
+  <div class="letter-card">
+    <p>My Baby, Happy 21st Birthday! 🎂</p>
+    <p>Twenty-one. I keep saying that number in my head and smiling, because that's you — growing, glowing, becoming even more of the person I already love so deeply. I am so, so happy for you today, and every single day that I get to call you mine.</p>
+    <p>I miss you so much it's silly. There are moments when I just want to be right next to you, holding your hand, doing absolutely nothing — and it would still be my favorite place in the world. I hope to see you soon, Baby. I'm counting down.</p>
+    <p>Mag-iingat ka palagi, ha? Take care of yourself the way you take care of everyone around you — so gently, so lovingly. You deserve that same tenderness returned to you a thousandfold.</p>
+    <p>On your 21st, I just want you to know: you are so loved. Not just today. Every day, in every quiet moment, in every distance between us — <strong>mahal na mahal kita, Rhea. Always.</strong></p>
+    <div class="letter-sig">Forever yours 💕</div>
+  </div>
+</section>
+
+<div class="divider">· · · 🌸 · · ·</div>
+
+<!-- PHOTO GALLERY -->
+<section class="gallery-section">
+  <div class="section-label">our little world</div>
+  <div class="section-title">Us, in photos 📷</div>
+
+  <div class="gallery-grid" id="gallery"></div>
+</section>
+
+<div class="divider">· · · 💌 · · ·</div>
+
+<!-- 21 REASONS -->
+<section>
+  <div class="section-label">because 21 is special</div>
+  <div class="section-title">21 reasons I love you 💗</div>
+  <div class="reasons-list" id="reasons-list"></div>
+</section>
+
+<div class="divider">· · · 🎂 · · ·</div>
+
+<!-- BIRTHDAY BANNER -->
+<section>
+  <div class="bday-banner">
+    <h2>Happy Birthday, Baby! 🎉</h2>
+    <p>Wishing you the most beautiful year yet — full of joy, laughter, and all the love you deserve.</p>
+    <button class="confetti-btn" onclick="burst()">Send her love 💕</button>
+  </div>
+</section>
+
+<footer>
+  Made with all my heart, just for <span>Rhea Balaoro</span> 🌸<br>
+  <span style="font-size:15px; color:var(--muted);">21 & forever loved</span>
+</footer>
+
+<script>
+  // Petals
+  const petals = document.getElementById('petals');
+  const emojis = ['🌸','🌺','✨','💕','🌷','💖','🎀'];
+  for (let i = 0; i < 16; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.fontSize = (13 + Math.random() * 12) + 'px';
+    p.style.animationDuration = (9 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    petals.appendChild(p);
+  }
+
+  // Gallery
+  const gallery = document.getElementById('gallery');
+  const photos = [
+    { src: '1.jpg',   caption: 'my fave person 🌸' },
+    { src: '2.jpg',   caption: 'us forever 💕' },
+    { src: '3.jpeg',  caption: 'this moment 💖' },
+    { src: '4.jpeg',  caption: "can't stop smiling 😊" },
+    { src: '5.jpeg',  caption: 'my whole world 🌍' },
+    { src: '6.jpg',   caption: 'always you 💌' },
+  ];
+  photos.forEach(({ src, caption }) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'photo-wrap';
+    const slot = document.createElement('div');
+    slot.className = 'photo-slot';
+    slot.innerHTML = `<img src="${src}" alt="our photo">`;
+    const cap = document.createElement('div');
+    cap.className = 'photo-caption';
+    cap.textContent = caption;
+    wrap.appendChild(slot);
+    wrap.appendChild(cap);
+    gallery.appendChild(wrap);
+  });
+
+  // 21 Reasons
+  const reasons = [
+    "Your smile literally stops time for me.",
+    "The way you laugh — genuinely, fully — is my favorite sound.",
+    "You make even the boring days feel like something worth remembering.",
+    "You're so strong, even when you think you're not.",
+    "You care about people so deeply, so genuinely.",
+    "Your voice calms me down when everything feels loud.",
+    "You're the first person I want to tell everything to.",
+    "You're patient with me, even when I don't deserve it.",
+    "You're so beautiful — inside and out, always.",
+    "Talking to you never gets old, not even a little.",
+    "You inspire me to be better just by being you.",
+    "You're funny without even trying to be.",
+    "You make me feel safe in a way nothing else does.",
+    "The way you see the world makes me see it differently too.",
+    "You remember the little things — that means so much to me.",
+    "You're honest with me, even when it's hard.",
+    "Missing you just proves how much you mean to me.",
+    "You've changed my life in the best, most permanent way.",
+    "Every memory I have with you is one I hold close.",
+    "You feel like home, no matter where we are.",
+    "Because you're Rhea — and that alone is more than enough. 💖"
+  ];
+  const list = document.getElementById('reasons-list');
+  reasons.forEach((r, i) => {
+    const item = document.createElement('div');
+    item.className = 'reason-item';
+    item.innerHTML = `<div class="reason-num">${i + 1}</div><div class="reason-text">${r}</div>`;
+    list.appendChild(item);
+  });
+
+  // Confetti burst
+  const burstStyle = document.createElement('style');
+  burstStyle.textContent = `@keyframes burstFly { 0%{opacity:1;transform:scale(0.5) translateY(0) rotate(0deg)} 100%{opacity:0;transform:scale(1.4) translateY(-120px) rotate(180deg)} }`;
+  document.head.appendChild(burstStyle);
+
+  function burst() {
+    const es = ['🌸','💕','✨','🎉','💖','🌺','🎀','💗','⭐'];
+    for (let i = 0; i < 24; i++) {
+      const el = document.createElement('div');
+      el.style.cssText = `position:fixed;z-index:999;pointer-events:none;left:${20+Math.random()*60}vw;top:${20+Math.random()*50}vh;font-size:${18+Math.random()*20}px;animation:burstFly ${1.2+Math.random()*0.8}s ease forwards;animation-delay:${Math.random()*0.4}s;`;
+      el.textContent = es[Math.floor(Math.random()*es.length)];
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 2500);
+    }
+  }
+</script>
+</body>
+</html>
